@@ -205,8 +205,9 @@ CREATE TABLE IF NOT EXISTS market_prices (
     close_price REAL NOT NULL,
     currency TEXT NOT NULL,
     source TEXT,
+    retrieved_at TEXT,
     FOREIGN KEY (asset_id) REFERENCES assets(asset_id),
-    UNIQUE(asset_id, date)
+    UNIQUE(asset_id, date, source)
 );
 
 CREATE TABLE IF NOT EXISTS backtests (
