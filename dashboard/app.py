@@ -96,13 +96,13 @@ def main() -> None:
     st.divider()
 
     st.subheader("Current Demo Positions")
-    st.dataframe(positions, use_container_width=True)
+    st.dataframe(positions, width="stretch")
 
     st.subheader("Demo Transactions")
-    st.dataframe(transactions, use_container_width=True)
+    st.dataframe(transactions, width="stretch")
 
     st.subheader("Demo Prices")
-    st.dataframe(prices, use_container_width=True)
+    st.dataframe(prices, width="stretch")
 
     st.info(
         "This dashboard uses fictitious demo data. Real financial data should remain local "
