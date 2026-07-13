@@ -77,6 +77,45 @@ CREATE TABLE IF NOT EXISTS signals (
     FOREIGN KEY (asset_id) REFERENCES assets(asset_id)
 );
 
+CREATE TABLE IF NOT EXISTS strategy_assets (
+    strategy_asset_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    strategy_id INTEGER NOT NULL,
+    asset_id INTEGER NOT NULL,
+    role TEXT,
+    notes TEXT,
+    FOREIGN KEY (strategy_id) REFERENCES strategies(strategy_id),
+    FOREIGN KEY (asset_id) REFERENCES assets(asset_id),
+    UNIQUE(strategy_id, asset_id)
+);
+
+CREATE TABLE IF NOT EXISTS strategy_pairs (
+    pair_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    strategy_id INTEGER NOT NULL,
+    asset_a_id INTEGER NOT NULL,
+    asset_b_id INTEGER NOT NULL,
+    pair_name TEXT,
+    relationship_type TEXT,
+    notes TEXT,
+    FOREIGN KEY (strategy_id) REFERENCES strategies(strategy_id),
+    FOREIGN KEY (asset_a_id) REFERENCES assets(asset_id),
+    FOREIGN KEY (asset_b_id) REFERENCES assets(asset_id),
+    UNIQUE(strategy_id, asset_a_id, asset_b_id)
+);
+
+CREATE TABLE IF NOT EXISTS signal_legs (
+    signal_leg_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    signal_id INTEGER NOT NULL,
+    asset_id INTEGER NOT NULL,
+    leg_action TEXT NOT NULL,
+    target_weight REAL,
+    suggested_quantity REAL,
+    suggested_price REAL,
+    score REAL,
+    notes TEXT,
+    FOREIGN KEY (signal_id) REFERENCES signals(signal_id),
+    FOREIGN KEY (asset_id) REFERENCES assets(asset_id)
+);
+
 CREATE TABLE IF NOT EXISTS trades (
     trade_id INTEGER PRIMARY KEY AUTOINCREMENT,
     strategy_id INTEGER,

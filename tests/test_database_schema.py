@@ -31,6 +31,9 @@ def test_schema_contains_core_tables():
         "reports",
 	"portfolio_rotations",
 	"rotation_legs",
+	"strategy_assets",
+	"strategy_pairs",
+	"signal_legs",
     ]
 
     for table in required_tables:
