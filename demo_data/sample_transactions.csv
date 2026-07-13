@@ -1,0 +1,7 @@
+date,account,ticker,asset_type,transaction_type,quantity,price,fees,taxes,currency,strategy,notes
+2024-01-10,Demo Broker,PETR4,Stock,BUY,100,32.5,2.5,0.0,BRL,Manual Value Trade,Initial demo position
+2024-02-15,Demo Broker,ITUB4,Stock,BUY,80,28.1,2.0,0.0,BRL,Dividend Strategy,Demo dividend-oriented purchase
+2024-03-20,Demo Broker,PETR4,Stock,SELL,40,36.2,2.2,0.0,BRL,Manual Value Trade,Partial profit-taking demo trade
+2024-04-05,Demo Broker,ITUB4,Stock,DIVIDEND,80,0.35,0.0,0.0,BRL,Dividend Strategy,Demo dividend income
+2024-05-12,Demo Broker,BOVA11,ETF,BUY,20,124.3,1.8,0.0,BRL,Benchmark Allocation,Demo ETF allocation
+2024-06-18,Demo Broker,PETR4,Stock,STOCK_LENDING,60,0.12,0.0,0.0,BRL,Manual Value Trade,Demo stock lending income
