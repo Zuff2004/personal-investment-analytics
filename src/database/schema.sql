@@ -103,7 +103,34 @@ CREATE TABLE IF NOT EXISTS trade_legs (
     FOREIGN KEY (trade_id) REFERENCES trades(trade_id),
     FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id)
 );
+CREATE TABLE IF NOT EXISTS portfolio_rotations (
+    rotation_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    from_asset_id INTEGER NOT NULL,
+    to_asset_id INTEGER NOT NULL,
+    strategy_id INTEGER,
+    capital_rotated REAL,
+    reason TEXT,
+    status TEXT DEFAULT 'OPEN',
+    notes TEXT,
+    FOREIGN KEY (from_asset_id) REFERENCES assets(asset_id),
+    FOREIGN KEY (to_asset_id) REFERENCES assets(asset_id),
+    FOREIGN KEY (strategy_id) REFERENCES strategies(strategy_id)
+);
 
+CREATE TABLE IF NOT EXISTS rotation_legs (
+    rotation_leg_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rotation_id INTEGER NOT NULL,
+    transaction_id INTEGER NOT NULL,
+    leg_type TEXT NOT NULL,
+    asset_id INTEGER NOT NULL,
+    quantity REAL,
+    price REAL,
+    value REAL,
+    FOREIGN KEY (rotation_id) REFERENCES portfolio_rotations(rotation_id),
+    FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id),
+    FOREIGN KEY (asset_id) REFERENCES assets(asset_id)
+);
 CREATE TABLE IF NOT EXISTS realized_gains (
     realized_gain_id INTEGER PRIMARY KEY AUTOINCREMENT,
     sell_transaction_id INTEGER NOT NULL,

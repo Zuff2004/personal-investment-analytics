@@ -29,6 +29,8 @@ def test_schema_contains_core_tables():
         "backtests",
         "backtest_results",
         "reports",
+	"portfolio_rotations",
+	"rotation_legs",
     ]
 
     for table in required_tables:
