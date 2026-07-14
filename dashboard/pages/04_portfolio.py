@@ -10,7 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 
-from src.database.connection import initialize_database
+from src.database.connection import fetch_dataframe, initialize_database
 from src.market_data.market_data_service import update_prices_for_tracked_assets
 from src.portfolio.positions import calculate_positions_from_database
 
@@ -35,9 +35,7 @@ with st.spinner("Checking market prices..."):
     update_result = update_prices_for_tracked_assets(max_age_hours=12)
 
 if update_result["updated"]:
-    updated_tickers = [
-        item["ticker"] for item in update_result["updated"]
-    ]
+    updated_tickers = [item["ticker"] for item in update_result["updated"]]
     st.success(
         f"Updated prices for {len(updated_tickers)} asset(s): "
         f"{', '.join(updated_tickers)}"
@@ -48,7 +46,56 @@ if update_result["errors"]:
     st.dataframe(update_result["errors"], width="stretch")
 
 
-positions, income_summary, summary = calculate_positions_from_database()
+try:
+    positions, income_summary, summary = calculate_positions_from_database()
+
+except ValueError as error:
+    st.error("Portfolio calculation could not be completed because some transactions are inconsistent.")
+
+    st.warning(str(error))
+
+    st.markdown(
+        """
+        This usually happens when there is a SELL transaction without a previous BUY transaction
+        for the same asset, or when the sold quantity is larger than the current position.
+
+        To fix it, check whether:
+        - the original BUY transaction was entered;
+        - the ticker was typed correctly;
+        - the sale quantity is correct;
+        - the transaction dates are correct;
+        - the asset was transferred from another broker and needs an initial position entry.
+        """
+    )
+
+    st.subheader("Recent Buy/Sell Transactions")
+
+    recent_transactions = fetch_dataframe(
+        """
+        SELECT
+            t.transaction_id,
+            t.date,
+            a.ticker,
+            t.transaction_type,
+            t.quantity,
+            t.price,
+            t.gross_value,
+            t.fees,
+            t.taxes,
+            t.net_value,
+            t.currency,
+            t.notes
+        FROM transactions t
+        LEFT JOIN assets a ON t.asset_id = a.asset_id
+        WHERE t.transaction_type IN ('BUY', 'SELL')
+        ORDER BY t.date DESC, t.transaction_id DESC
+        LIMIT 50
+        """
+    )
+
+    st.dataframe(recent_transactions, width="stretch")
+
+    st.stop()
 
 
 st.subheader("Portfolio Summary")
